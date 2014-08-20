@@ -28,22 +28,22 @@ namespace Techeasy.EasyRemote.MicroApp
 
             var webServer = new WebServer();
             //webServer.Add(new RequestRoute("/test", HttpMethod.GET, request => new HtmlResponse("Hello World !")));
-            webServer.Add(new RequestRoute("/api/time", HttpMethod.GET, GetTime));
+            //webServer.Add(new RequestRoute("/api/time", HttpMethod.GET, GetTime));
             //webServer.Add(new RequestRoute("/api/time", HttpMethod.PUT, SetTime));
-
+            webServer.Run();
             Thread.Sleep(Timeout.Infinite);
         }
 
-        private static void GetTime(HttpListenerContext context)
-        {
-            string msg = context.Request.HttpMethod + " " + context.Request.Url;
-            String str = "<html><body><h1>" + msg + "</h1></body></html>";
-            byte[] messageBody = Encoding.UTF8.GetBytes(str);
-            context.Response.ContentType = "text/html";
-            context.Response.ContentLength64 = messageBody.Length;
-            context.Response.OutputStream.Write(messageBody, 0, messageBody.Length);
-            context.Response.OutputStream.Close();
-        }
+        //private static void GetTime(HttpListenerContext context)
+        //{
+        //    string msg = context.Request.HttpMethod + " " + context.Request.Url;
+        //    String str = "<html><body><h1>" + msg + "</h1></body></html>";
+        //    byte[] messageBody = Encoding.UTF8.GetBytes(str);
+        //    context.Response.ContentType = "text/html";
+        //    context.Response.ContentLength64 = messageBody.Length;
+        //    context.Response.OutputStream.Write(messageBody, 0, messageBody.Length);
+        //    //context.Response.OutputStream.Close();
+        //}
 
         //private static void SetTime(HttpListenerContext context)
         //{

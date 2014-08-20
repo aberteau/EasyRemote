@@ -39,6 +39,7 @@
     <Compile Include="Utilities\HttpUtility.cs" />
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="WebServer.cs" />
+    <Compile Include="Worker.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.SPOT.Hardware" />
