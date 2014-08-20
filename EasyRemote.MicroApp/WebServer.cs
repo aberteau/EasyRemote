@@ -124,18 +124,6 @@ namespace Techeasy.EasyRemote.MicroApp
         /// Delegate for the CommandReceived event.
         /// </summary>
         public delegate void GetRequestHandler(object obj, WebServerEventArgs e);
-        public class WebServerEventArgs : EventArgs
-        {
-            public WebServerEventArgs(Socket mresponse, string mrawURL)
-            {
-                this.response = mresponse;
-                this.rawURL = mrawURL;
-            }
-            public Socket response { get; protected set; }
-            public string rawURL { get; protected set; }
-
-        }
-
 
         /// <summary>
         /// CommandReceived event is triggered when a valid command (plus parameters) is received.
@@ -312,23 +300,22 @@ namespace Techeasy.EasyRemote.MicroApp
                                 connection.SendTimeout = this.Timeout; ;
                                 // Convert to string, will include HTTP headers.
                                 string rawData = new string(Encoding.UTF8.GetChars(bytes));
-                                string mURI;
+                                string mUri;
 
                                 // Remove GET + Space
                                 // pull out uri and remove the first /
                                 if (rawData.Length > 5)
                                 {
                                     int uriStart = rawData.IndexOf(' ') + 2;
-                                    mURI = rawData.Substring(uriStart, rawData.IndexOf(' ', uriStart) - uriStart);
+                                    mUri = rawData.Substring(uriStart, rawData.IndexOf(' ', uriStart) - uriStart);
                                 }
                                 else
-                                    mURI = "";
+                                    mUri = "";
                                 // return a simple header in the code like this in the handling fuction
                                 //string header = "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nCache-Control: no-cache\r\nConnection: close\r\n\r\n";
                                 //connection.Send(Encoding.UTF8.GetBytes(header), header.Length, SocketFlags.None);
                                 //and then you can return HTML code
-                                if (CommandReceived != null)
-                                    CommandReceived(this, new WebServerEventArgs(connection, mURI));
+                                RaiseCommandReceived(connection, mUri);
                             }
                         }
                     }
@@ -339,6 +326,17 @@ namespace Techeasy.EasyRemote.MicroApp
                     }
                 }
             }
+        }
+
+        private void RaiseCommandReceived(Socket connection, string mUri)
+        {
+            RaiseCommandReceived(new WebServerEventArgs(connection, mUri));
+        }
+
+        private void RaiseCommandReceived(WebServerEventArgs webServerEventArgs)
+        {
+            if (CommandReceived != null)
+                CommandReceived(this, webServerEventArgs);
         }
 
         /// <summary>

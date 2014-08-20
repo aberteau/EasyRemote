@@ -11,9 +11,15 @@ namespace Techeasy.EasyRemote.MicroApp
 {
     public class Program
     {
+        private static WebServer server;
+
         public static void Main()
         {
-            // write your code here
+            // Start the HTTP Server
+            WebServer server = new WebServer(80, 10000);
+            server.CommandReceived += new WebServer.GetRequestHandler(ProcessClientGetRequest);
+            // Start the server.
+            server.Start();
 
 
         }
