@@ -16,6 +16,11 @@ namespace Techeasy.MicroFramework.Net.Http
             _httpListener = new HttpListener("http");
         }
 
+        public void RunAsync()
+        {
+            new Thread(Run).Start();
+        }
+
         public void Run()
         {
             _httpListener.Start();

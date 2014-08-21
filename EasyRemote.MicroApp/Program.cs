@@ -28,7 +28,7 @@ namespace Techeasy.EasyRemote.MicroApp
             //webServer.Add(new RequestRoute("/test", HttpMethod.GET, request => new HtmlResponse("Hello World !")));
             //webServer.Add(new RequestRoute("/api/time", HttpMethod.GET, GetTime));
             //webServer.Add(new RequestRoute("/api/time", HttpMethod.PUT, SetTime));
-            httpServer.Run();
+            httpServer.RunAsync();
             Thread.Sleep(Timeout.Infinite);
         }
 
