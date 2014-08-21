@@ -39,7 +39,7 @@
     <Compile Include="Utilities\HttpUtility.cs" />
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="HttpServer.cs" />
-    <Compile Include="Worker.cs" />
+    <Compile Include="HttpHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.SPOT.Native">

@@ -22,7 +22,7 @@ namespace Techeasy.MicroFramework.Net.Http
             while(true)
             {
                 HttpListenerContext ctx = _httpListener.GetContext();
-                new Thread(new Worker(ctx).ProcessRequest).Start();
+                new Thread(new HttpHandler(ctx).Handle).Start();
             }
         }
     }

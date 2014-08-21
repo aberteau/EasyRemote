@@ -5,16 +5,16 @@ using Microsoft.SPOT;
 
 namespace Techeasy.MicroFramework.Net.Http
 {
-    class Worker
+    class HttpHandler
     {
         private HttpListenerContext context;
 
-        public Worker(HttpListenerContext context)
+        public HttpHandler(HttpListenerContext context)
         {
             this.context = context;
         }
 
-        public void ProcessRequest()
+        public void Handle()
         {
             string msg = context.Request.HttpMethod + " " + context.Request.Url.OriginalString;
             String str = "<html><body>" + msg + "</body></html>";
