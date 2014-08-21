@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using Microsoft.SPOT;
 
-namespace Techeasy.Framework.MicroWebServer.Utilities
+namespace Techeasy.MicroFramework.Net.Http.Utilities
 {
     public static class HttpUtility
     {

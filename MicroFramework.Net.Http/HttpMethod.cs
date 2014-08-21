@@ -1,7 +1,7 @@
 using System;
 using Microsoft.SPOT;
 
-namespace Techeasy.Framework.MicroWebServer
+namespace Techeasy.MicroFramework.Net.Http
 {
     public enum HttpMethod
     {

@@ -47,9 +47,9 @@
     <Reference Include="System.Http" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Framework.MicroWebServer\Framework.MicroWebServer.csproj">
-      <Project>{EBD292B4-E679-4104-B348-0C3FF4710009}</Project>
-      <Name>Framework.MicroWebServer</Name>
+    <ProjectReference Include="..\MicroFramework.Net.Http\MicroFramework.Net.Http.csproj">
+      <Project>{D6F3B5FC-4114-4FAB-A840-205DAFA03A07}</Project>
+      <Name>MicroFramework.Net.Http</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@ using System.Net;
 using System.Text;
 using Microsoft.SPOT;
 
-namespace Techeasy.Framework.MicroWebServer
+namespace Techeasy.MicroFramework.Net.Http
 {
     class Worker
     {

@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using Microsoft.SPOT;
 
-namespace Techeasy.Framework.MicroWebServer.Requests
+namespace Techeasy.MicroFramework.Net.Http.Requests
 {
     public delegate void WebRequestHandler(HttpListenerContext request);
 }

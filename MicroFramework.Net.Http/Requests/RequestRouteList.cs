@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using Microsoft.SPOT;
-using Techeasy.Framework.MicroWebServer.Utilities;
+using Techeasy.MicroFramework.Net.Http.Utilities;
 
-namespace Techeasy.Framework.MicroWebServer.Requests
+namespace Techeasy.MicroFramework.Net.Http.Requests
 {
     public class RequestRouteList : IEnumerable
     {

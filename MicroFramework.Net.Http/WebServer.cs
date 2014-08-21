@@ -2,10 +2,10 @@
 using System.Net;
 using System.Threading;
 using Microsoft.SPOT;
-using Techeasy.Framework.MicroWebServer.Requests;
-using Techeasy.Framework.MicroWebServer.Utilities;
+using Techeasy.MicroFramework.Net.Http.Requests;
+using Techeasy.MicroFramework.Net.Http.Utilities;
 
-namespace Techeasy.Framework.MicroWebServer
+namespace Techeasy.MicroFramework.Net.Http
 {
     public class WebServer
     {

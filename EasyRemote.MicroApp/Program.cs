@@ -8,9 +8,7 @@ using Microsoft.SPOT.Hardware;
 using Microsoft.SPOT.Net.NetworkInformation;
 using SecretLabs.NETMF.Hardware;
 using SecretLabs.NETMF.Hardware.Netduino;
-using Techeasy.Framework.MicroWebServer;
-using Techeasy.Framework.MicroWebServer.Requests;
-using Techeasy.Framework.MicroWebServer.Utilities;
+using Techeasy.MicroFramework.Net.Http;
 
 namespace Techeasy.EasyRemote.MicroApp
 {

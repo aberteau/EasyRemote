@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Techeasy.Framework.MicroWebServer")]
+[assembly: AssemblyTitle("Techeasy.MicroFramework.Net.Http")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Tech'Easy")]
-[assembly: AssemblyProduct("Techeasy.Framework.MicroWebServer")]
+[assembly: AssemblyProduct("Techeasy.MicroFramework.Net.Http")]
 [assembly: AssemblyCopyright("Copyright © Tech'Easy 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

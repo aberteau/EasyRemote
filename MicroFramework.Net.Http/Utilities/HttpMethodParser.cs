@@ -1,7 +1,7 @@
 using System;
 using Microsoft.SPOT;
 
-namespace Techeasy.Framework.MicroWebServer.Utilities
+namespace Techeasy.MicroFramework.Net.Http.Utilities
 {
     public static class HttpMethodParser
     {
