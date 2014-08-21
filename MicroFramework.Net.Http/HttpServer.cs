@@ -7,11 +7,11 @@ using Techeasy.MicroFramework.Net.Http.Utilities;
 
 namespace Techeasy.MicroFramework.Net.Http
 {
-    public class WebServer
+    public class HttpServer
     {
         private HttpListener _httpListener;
 
-        public WebServer()
+        public HttpServer()
         {
             _httpListener = new HttpListener("http");
         }

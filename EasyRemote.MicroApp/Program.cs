@@ -24,11 +24,11 @@ namespace Techeasy.EasyRemote.MicroApp
             networkInterface.EnableDhcp();
             Debug.Print("IP Address = " + networkInterface.IPAddress + ", Gateway = " + networkInterface.GatewayAddress + ", MAC = " + networkInterface.PhysicalAddress);
 
-            var webServer = new WebServer();
+            var httpServer = new HttpServer();
             //webServer.Add(new RequestRoute("/test", HttpMethod.GET, request => new HtmlResponse("Hello World !")));
             //webServer.Add(new RequestRoute("/api/time", HttpMethod.GET, GetTime));
             //webServer.Add(new RequestRoute("/api/time", HttpMethod.PUT, SetTime));
-            webServer.Run();
+            httpServer.Run();
             Thread.Sleep(Timeout.Infinite);
         }
 
