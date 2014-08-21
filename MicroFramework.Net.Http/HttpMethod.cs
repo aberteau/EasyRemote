@@ -5,9 +5,9 @@ namespace Techeasy.MicroFramework.Net.Http
 {
     public enum HttpMethod
     {
-        GET,
-        POST,
-        PUT,
-        DELETE
+        Get,
+        Post,
+        Put,
+        Delete
     }
 }

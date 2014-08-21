@@ -9,10 +9,10 @@ namespace Techeasy.MicroFramework.Net.Http.Utilities
         {
             switch (method)
             {
-                case "GET": return HttpMethod.GET;
-                case "POST": return HttpMethod.POST;
-                case "DELETE": return HttpMethod.DELETE;
-                case "PUT": return HttpMethod.PUT;
+                case "GET": return HttpMethod.Get;
+                case "POST": return HttpMethod.Post;
+                case "DELETE": return HttpMethod.Delete;
+                case "PUT": return HttpMethod.Put;
                 default: throw new ApplicationException("Unknown Http Method");
             }
         }

@@ -22,7 +22,7 @@ namespace Techeasy.MicroFramework.Net.Http.Requests
         public void Add(RequestRoute route)
         {
             if (route.IsFileResponse)
-                _routeTable.Add(HttpMethod.GET + "_" + route.Path, route);
+                _routeTable.Add(HttpMethod.Get + "_" + route.Path, route);
             else
                 _routeTable.Add(route.HttpMethod + "_" + route.Path, route);
         }
