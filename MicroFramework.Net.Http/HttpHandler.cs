@@ -18,9 +18,8 @@ namespace Techeasy.MicroFramework.Net.Http
 
         public void Handle()
         {
-            String query = HttpUtility.ExtractQuery(context.Request.Url.OriginalString);
-            NameValueCollection nameValueCollection = HttpUtility.ParseQueryString(query);
-            string msg = context.Request.HttpMethod + " " + context.Request.Url.OriginalString + "<br/>" + GetHtmlDebugTable(nameValueCollection);
+            Url url = HttpUtility.ExtractUrl(context.Request.Url.OriginalString);
+            string msg = context.Request.HttpMethod + " " + context.Request.Url.OriginalString + "<br/>" + GetHtmlDebugTable(url.Params);
             String str = "<html><body>" + msg + "</body></html>";
             byte[] messageBody = Encoding.UTF8.GetBytes(str);
             context.Response.ContentType = "text/html";

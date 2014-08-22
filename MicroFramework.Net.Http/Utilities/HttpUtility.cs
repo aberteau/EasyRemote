@@ -8,6 +8,18 @@ namespace Techeasy.MicroFramework.Net.Http.Utilities
 {
     public static class HttpUtility
     {
+        public static Url ExtractUrl(String url)
+        {
+            Int32 sepIndex = url.IndexOf('?');
+
+            if (sepIndex == -1)
+                return new Url(url, null);
+
+            String path = url.Substring(0, sepIndex);
+            NameValueCollection nameValueCollection = ParseQueryString(url.Substring(sepIndex));
+            return new Url(path, nameValueCollection);
+        }
+
         public static String ExtractQuery(String url)
         {
             Int32 sepIndex = url.IndexOf('?');
