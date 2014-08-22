@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Text;
 using Microsoft.SPOT;
 
@@ -6,84 +7,156 @@ namespace Techeasy.MicroFramework.Net.Http.Utilities
 {
     public static class HttpUtility
     {
-        public static string UrlDecode(string s)
+        public static String ExtractQuery(String url)
         {
-            if (s == null) return null;
-            if (s.Length < 1) return s;
+            Int32 sepIndex = url.IndexOf('?');
+            if (sepIndex == -1)
+                return null;
 
-            char[] chars = s.ToCharArray();
-            var bytes = new byte[chars.Length * 2];
-            int count = chars.Length;
-            int dstIndex = 0;
-            int srcIndex = 0;
+            return url.Substring(sepIndex);
+        }
 
-            while (true)
+        public static NameValueCollection ParseQueryString(string query)
+        {
+            return ParseQueryString(query, Encoding.UTF8);
+        }
+
+        public static NameValueCollection ParseQueryString(string query, Encoding encoding)
+        {
+            if (query == null)
             {
-                if (srcIndex >= count)
+                throw new ArgumentNullException("query");
+            }
+ 
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+  
+            if (query.Length > 0 && query[0] == '?')
+            {
+                query = query.Substring(1);
+            }
+
+            NameValueCollection nameValueCollection = new NameValueCollection();
+
+            int l = (query != null) ? query.Length : 0;
+            int i = 0;
+
+            while (i < l)
+            {
+                // find next & while noting first = on the way (and if there are more)
+
+                int si = i;
+                int ti = -1;
+
+                while (i < l)
                 {
-                    if (dstIndex < srcIndex)
+                    char ch = query[i];
+
+                    if (ch == '=')
                     {
-                        var sizedBytes = new byte[dstIndex];
-                        Array.Copy(bytes, 0, sizedBytes, 0, dstIndex);
-                        bytes = sizedBytes;
+                        if (ti < 0)
+                            ti = i;
                     }
-                    return new string(Encoding.UTF8.GetChars(bytes));
+                    else if (ch == '&')
+                    {
+                        break;
+                    }
+
+                    i++;
                 }
 
-                if (chars[srcIndex] == '+')
+                // extract the name / value pair
+
+                string name = null;
+                string value = null;
+
+                if (ti >= 0)
                 {
-                    bytes[dstIndex++] = (byte)' ';
-                    srcIndex += 1;
+                    name = query.Substring(si, ti - si);
+                    value = query.Substring(ti + 1, i - ti - 1);
                 }
-                else if (chars[srcIndex] == '%' && srcIndex < count - 2)
-                    if (chars[srcIndex + 1] == 'u' && srcIndex < count - 5)
-                    {
-                        int ch1 = HexToInt(chars[srcIndex + 2]);
-                        int ch2 = HexToInt(chars[srcIndex + 3]);
-                        int ch3 = HexToInt(chars[srcIndex + 4]);
-                        int ch4 = HexToInt(chars[srcIndex + 5]);
-
-                        if (ch1 >= 0 && ch2 >= 0 && ch3 >= 0 && ch4 >= 0)
-                        {
-                            bytes[dstIndex++] = (byte)((ch1 << 4) | ch2);
-                            bytes[dstIndex++] = (byte)((ch3 << 4) | ch4);
-                            srcIndex += 6;
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        int ch1 = HexToInt(chars[srcIndex + 1]);
-                        int ch2 = HexToInt(chars[srcIndex + 2]);
-
-                        if (ch1 >= 0 && ch2 >= 0)
-                        {
-                            bytes[dstIndex++] = (byte)((ch1 << 4) | ch2);
-                            srcIndex += 3;
-                            continue;
-                        }
-                    }
                 else
                 {
-                    byte[] charBytes = Encoding.UTF8.GetBytes(chars[srcIndex++].ToString());
-                    charBytes.CopyTo(bytes, dstIndex);
-                    dstIndex += charBytes.Length;
+                    value = query.Substring(si, i - si);
+                }
+
+                // add name / value pair to the collection
+                nameValueCollection.Add(name, value);
+
+                // trailing '&'
+
+                if (i == l - 1 && query[i] == '&')
+                {
+                    nameValueCollection.Add(null, string.Empty);
+                }
+
+                i++;
+            }
+            return nameValueCollection;
+        }
+
+        public static string ToString(NameValueCollection nameValueCollection)
+        {
+            return ToString(nameValueCollection, null);
+        }
+
+        public static string ToString(NameValueCollection nameValueCollection, IDictionary excludeKeys)
+        {
+            int n = nameValueCollection.Count;
+            if (n == 0)
+                return string.Empty;
+
+            StringBuilder s = new StringBuilder();
+            string key, keyPrefix, item;
+
+            for (int i = 0; i < n; i++)
+            {
+                key = nameValueCollection.GetKey(i);
+
+                if (excludeKeys != null && key != null && excludeKeys[key] != null)
+                {
+                    continue;
+                }
+
+                keyPrefix = (!key.IsNullOrEmpty()) ? (key + "=") : string.Empty;
+
+                String[] values = nameValueCollection[i];
+                int numValues = (values != null) ? values.Length : 0;
+
+                if (s.Length > 0)
+                {
+                    s.Append('&');
+                }
+
+                if (numValues == 1)
+                {
+                    s.Append(keyPrefix);
+                    item = values[0];
+                    s.Append(item);
+                }
+                else if (numValues == 0)
+                {
+                    s.Append(keyPrefix);
+                }
+                else
+                {
+                    for (int j = 0; j < numValues; j++)
+                    {
+                        if (j > 0)
+                        {
+                            s.Append('&');
+                        }
+                        s.Append(keyPrefix);
+                        item = (string)values[j];
+                        s.Append(item);
+                    }
                 }
             }
+
+            return s.ToString();
         }
 
-        private static int HexToInt(char ch)
-        {
-            return
-                (ch >= '0' && ch <= '9') ? ch - '0' :
-                (ch >= 'a' && ch <= 'f') ? ch - 'a' + 10 :
-                (ch >= 'A' && ch <= 'F') ? ch - 'A' + 10 :
-                -1;
-        }
-
-        public static string UrlEncode(string text)
-        {
-            throw new ApplicationException("the UrlEncode methode is not implemented yet");
-        }
     }
 }

@@ -30,23 +30,5 @@ namespace Techeasy.MicroFramework.Net.Http.Utilities
             }
             return "";
         }
-
-        /// <summary>
-        /// Checks if a string starts with the given part.
-        /// </summary>
-        /// <param name="input">The string to check.</param>
-        /// <param name="part">The part to check for.</param>
-        /// <returns>True when input starts with the given part.</returns>
-        public static bool StartsWith(string input, string part)
-        {
-            if (input.Length < part.Length)
-                return false;
-
-            for (int i = 0; i < part.Length; i++)
-                if (input[i] != part[i])
-                    return false;
-
-            return true;
-        }
     }
 }
