@@ -1,8 +1,7 @@
 using System;
 using System.Collections;
-using Microsoft.SPOT;
 
-namespace Techeasy.MicroFramework.Net.Http
+namespace Techeasy.MicroFramework.Library
 {
     public class NameValueCollection
     {

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Text;
 using Microsoft.SPOT;
+using Techeasy.MicroFramework.Library;
 
 namespace Techeasy.MicroFramework.Net.Http.Utilities
 {
