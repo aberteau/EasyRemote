@@ -10,18 +10,11 @@ namespace Techeasy.MicroFramework.Net.Http
 {
     public class HttpServer
     {
-        private static ArrayList _httpHandlers;
-
-        static Queue _responseQueue = new Queue();
-
-        public HttpServer()
-        {
-            _httpHandlers = new ArrayList();
-        }
+        static readonly ArrayList HttpHandlers = new ArrayList();
 
         public void AddHttpHandler(IHttpHandler httpHandler)
         {
-            _httpHandlers.Add(httpHandler);
+            HttpHandlers.Add(httpHandler);
         }
 
         public void RunAsync()
@@ -29,7 +22,7 @@ namespace Techeasy.MicroFramework.Net.Http
             new Thread(Run).Start();
         }
 
-        public void Run()
+        private void Run()
         {
             HttpListener httpListener = new HttpListener("http");
             while (true)
@@ -40,12 +33,7 @@ namespace Techeasy.MicroFramework.Net.Http
                         httpListener.Start();
 
                     HttpListenerContext context = httpListener.GetContext();
-                    lock (_responseQueue)
-                    {
-                        _responseQueue.Enqueue(context);
-                    }
-
-                    Thread th = new Thread(new ThreadStart(HandleRequestThread));
+                    Thread th = new Thread(new ThreadStart(() => HandleRequestThread(context)));
                     th.Start();
                 }
                 catch (InvalidOperationException)
@@ -64,18 +52,11 @@ namespace Techeasy.MicroFramework.Net.Http
             }
         }
 
-        private static void HandleRequestThread()
+        private static void HandleRequestThread(HttpListenerContext context)
         {
-            HttpListenerContext context = null;
-
             try
             {
-                lock (_responseQueue)
-                {
-                    context = (HttpListenerContext)_responseQueue.Dequeue();
-                }
-
-                foreach (var httpHandlerObj in _httpHandlers)
+                foreach (var httpHandlerObj in HttpHandlers)
                 {
                     IHttpHandler httpHandler = httpHandlerObj as IHttpHandler;
                     httpHandler.ProcessRequest(context);
