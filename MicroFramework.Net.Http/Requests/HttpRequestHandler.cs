@@ -4,5 +4,5 @@ using Microsoft.SPOT;
 
 namespace Techeasy.MicroFramework.Net.Http.Requests
 {
-    public delegate void WebRequestHandler(HttpListenerContext request);
+    public delegate void HttpRequestHandler(HttpListenerContext request);
 }
