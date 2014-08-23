@@ -3,51 +3,36 @@ using System.Net;
 using System.Text;
 using Microsoft.SPOT;
 using Techeasy.MicroFramework.Library;
+using Techeasy.MicroFramework.Net.Http.Requests;
 using Techeasy.MicroFramework.Net.Http.Utilities;
 
 namespace Techeasy.MicroFramework.Net.Http
 {
-    class HttpHandler
+    public class HttpHandler
+        : IHttpHandler
     {
-        private HttpListenerContext context;
+        private readonly RequestRouteList _routeList;
 
-        public HttpHandler(HttpListenerContext context)
+        public HttpHandler()
         {
-            this.context = context;
+            _routeList = new RequestRouteList();
         }
 
-        public void Handle()
+        public void AddRoute(RequestRoute route)
+        {
+            _routeList.Add(route);
+        }
+
+        public void ProcessRequest(HttpListenerContext context)
         {
             Url url = HttpUtility.ExtractUrl(context.Request.Url.OriginalString);
-            string msg = context.Request.HttpMethod + " " + context.Request.Url.OriginalString + "<br/>" + GetHtmlDebugTable(url.Params);
-            String str = "<html><body>" + msg + "</body></html>";
-            byte[] messageBody = Encoding.UTF8.GetBytes(str);
-            context.Response.ContentType = "text/html";
-            context.Response.ContentLength64 = messageBody.Length;
-            context.Response.OutputStream.Write(messageBody, 0, messageBody.Length);
-            context.Response.OutputStream.Close();
-        }
+            var method = HttpMethodParser.Parse(context.Request.HttpMethod);
+            var route = _routeList.Find(method, url.Path);
 
-        private String GetHtmlDebugTable(NameValueCollection nameValueCollection)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append("<table>");
-            for (int i = 0; i < nameValueCollection.Pairs.Length; i++)
-            {
-                NameValuesPair pair = nameValueCollection.Pairs[i];
-                stringBuilder.Append("<tr>");
-                stringBuilder.Append("<td>" + pair.Name + "</td>");
-                stringBuilder.Append("<td>");
-                for (int j = 0; j < pair.Values.Length; j++)
-                {
-                    stringBuilder.Append(pair.Values[j]);
-                    stringBuilder.Append(", ");
-                }
-                stringBuilder.Append("</td>");
-                stringBuilder.Append("</tr>");
-            }
-            stringBuilder.Append("</table>");
-            return stringBuilder.ToString();
+            if (route != null)
+                route.RequestHandler(context);
+
+            context.Close();
         }
     }
 }

@@ -31,11 +31,12 @@
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
     <Compile Include="HttpMethod.cs" />
+    <Compile Include="IHttpHandler.cs" />
     <Compile Include="Url.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Requests\RequestRoute.cs" />
     <Compile Include="Requests\RequestRouteList.cs" />
-    <Compile Include="Requests\WebRequestHandler.cs" />
+    <Compile Include="Requests\HttpRequestHandler.cs" />
     <Compile Include="Utilities\HttpMethodParser.cs" />
     <Compile Include="Utilities\HttpUtility.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />

@@ -11,7 +11,7 @@ namespace Techeasy.MicroFramework.Net.Http.Requests
 
         public RequestRouteList()
         {
-            _routeTable = new Hashtable(25);
+            _routeTable = new Hashtable();
         }
 
         public IEnumerator GetEnumerator()
@@ -21,20 +21,25 @@ namespace Techeasy.MicroFramework.Net.Http.Requests
 
         public void Add(RequestRoute route)
         {
-            if (route.IsFileResponse)
-                _routeTable.Add(HttpMethod.Get + "_" + route.Path, route);
-            else
-                _routeTable.Add(route.HttpMethod + "_" + route.Path, route);
+            _routeTable.Add(GetKey(route.HttpMethod, route.Path), route);
         }
 
         public bool Contains(HttpMethod httpMethod, string path)
         {
-            return _routeTable.Contains(httpMethod + "_" + path);
+            return _routeTable.Contains(GetKey(httpMethod, path));
+        }
+
+        private static string GetKey(HttpMethod httpMethod, string path)
+        {
+            return httpMethod + "_" + path;
         }
 
         public RequestRoute Find(HttpMethod httpMethod, string path)
         {
-            return (RequestRoute)_routeTable[httpMethod + "_" + path];
+            if (!Contains(httpMethod, path))
+                return null;
+
+            return (RequestRoute)_routeTable[GetKey(httpMethod, path)];
         }
     }
 }

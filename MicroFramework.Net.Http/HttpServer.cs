@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Net;
 using System.Threading;
 using Microsoft.SPOT;
@@ -9,11 +10,19 @@ namespace Techeasy.MicroFramework.Net.Http
 {
     public class HttpServer
     {
-        private HttpListener _httpListener;
+        private readonly HttpListener _httpListener;
+
+        private readonly ArrayList _httpHandlers;
 
         public HttpServer()
         {
             _httpListener = new HttpListener("http");
+            _httpHandlers = new ArrayList();
+        }
+
+        public void AddHttpHandler(IHttpHandler httpHandler)
+        {
+            _httpHandlers.Add(httpHandler);
         }
 
         public void RunAsync()
@@ -27,7 +36,16 @@ namespace Techeasy.MicroFramework.Net.Http
             while(true)
             {
                 HttpListenerContext ctx = _httpListener.GetContext();
-                new Thread(new HttpHandler(ctx).Handle).Start();
+                new Thread(() => Handle(ctx)).Start();
+            }
+        }
+
+        private void Handle(HttpListenerContext ctx)
+        {
+            foreach (var httpHandlerObj in _httpHandlers)
+            {
+                IHttpHandler httpHandler = httpHandlerObj as IHttpHandler;
+                httpHandler.ProcessRequest(ctx);
             }
         }
     }
