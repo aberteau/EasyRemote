@@ -33,20 +33,20 @@ namespace Techeasy.EasyRemote.MicroApp
             networkInterface.EnableDhcp();
             Debug.Print("IP Address = " + networkInterface.IPAddress + ", Gateway = " + networkInterface.GatewayAddress + ", MAC = " + networkInterface.PhysicalAddress);
 
-            HttpHandler httpHandler = CreateHttpHandler();
+            RouteDispatcher routeDispatcher = InitRouteDispatcher();
 
             var httpServer = new HttpServer();
-            httpServer.AddHttpHandler(httpHandler);
+            httpServer.AddHttpHandler(routeDispatcher);
             httpServer.RunAsync();
             Thread.Sleep(Timeout.Infinite);
         }
 
-        private static HttpHandler CreateHttpHandler()
+        private static RouteDispatcher InitRouteDispatcher()
         {
-            var httpHandler = new HttpHandler();
-            httpHandler.AddRoute(new RequestRoute("/api/time", HttpMethod.Get, GetTime));
-            httpHandler.AddRoute(new RequestRoute("/api/led", HttpMethod.Get, ChangeLedStatus));
-            return httpHandler;
+            var routeDispatcher = new RouteDispatcher();
+            routeDispatcher.Add(new Route("/api/time", HttpMethod.Get, GetTime));
+            routeDispatcher.Add(new Route("/api/led", HttpMethod.Get, ChangeLedStatus));
+            return routeDispatcher;
         }
 
         private static void ChangeLedStatus(HttpListenerContext request)
@@ -70,22 +70,27 @@ namespace Techeasy.EasyRemote.MicroApp
         private static String GetHtmlDebugTable(NameValueCollection nameValueCollection)
         {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append("<table>");
-            for (int i = 0; i < nameValueCollection.Pairs.Length; i++)
+
+            if (nameValueCollection != null)
             {
-                NameValuesPair pair = nameValueCollection.Pairs[i];
-                stringBuilder.Append("<tr>");
-                stringBuilder.Append("<td>" + pair.Name + "</td>");
-                stringBuilder.Append("<td>");
-                for (int j = 0; j < pair.Values.Length; j++)
+                stringBuilder.Append("<table>");
+                for (int i = 0; i < nameValueCollection.Pairs.Length; i++)
                 {
-                    stringBuilder.Append(pair.Values[j]);
-                    stringBuilder.Append(", ");
+                    NameValuesPair pair = nameValueCollection.Pairs[i];
+                    stringBuilder.Append("<tr>");
+                    stringBuilder.Append("<td>" + pair.Name + "</td>");
+                    stringBuilder.Append("<td>");
+                    for (int j = 0; j < pair.Values.Length; j++)
+                    {
+                        stringBuilder.Append(pair.Values[j]);
+                        stringBuilder.Append(", ");
+                    }
+                    stringBuilder.Append("</td>");
+                    stringBuilder.Append("</tr>");
                 }
-                stringBuilder.Append("</td>");
-                stringBuilder.Append("</tr>");
+                stringBuilder.Append("</table>");    
             }
-            stringBuilder.Append("</table>");
+
             return stringBuilder.ToString();
         }
     }
