@@ -47,6 +47,7 @@ namespace Techeasy.MicroFramework.Net.Http
                 IHttpHandler httpHandler = httpHandlerObj as IHttpHandler;
                 httpHandler.ProcessRequest(ctx);
             }
+            ctx.Close();
         }
     }
 }

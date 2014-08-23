@@ -49,9 +49,11 @@ namespace Techeasy.MicroFramework.Net.Http
             var route = Find(method, url.Path);
 
             if (route != null)
-                route.RequestHandler(context);
-
-            context.Close();
+            {
+                HttpListenerRequest request = context.Request;
+                HttpListenerResponse response = context.Response;
+                route.RequestHandler(request, response);
+            }
         }
     }
 }

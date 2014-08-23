@@ -49,22 +49,22 @@ namespace Techeasy.EasyRemote.MicroApp
             return routeDispatcher;
         }
 
-        private static void ChangeLedStatus(HttpListenerContext request)
+        private static void ChangeLedStatus(HttpListenerRequest request, HttpListenerResponse response)
         {
             _ledStatus = !_ledStatus;
             _led.Write(_ledStatus);
         }
 
-        private static void GetTime(HttpListenerContext context)
+        private static void GetTime(HttpListenerRequest request, HttpListenerResponse response)
         {
-            Url url = HttpUtility.ExtractUrl(context.Request.Url.OriginalString);
-            string msg = context.Request.HttpMethod + " " + context.Request.Url.OriginalString + "<br/>" + GetHtmlDebugTable(url.Params);
+            Url url = HttpUtility.ExtractUrl(request.Url.OriginalString);
+            string msg = request.HttpMethod + " " + request.Url.OriginalString + "<br/>" + GetHtmlDebugTable(url.Params);
             String str = "<html><body>" + msg + "</body></html>";
             byte[] messageBody = Encoding.UTF8.GetBytes(str);
-            context.Response.ContentType = "text/html";
-            context.Response.ContentLength64 = messageBody.Length;
-            context.Response.OutputStream.Write(messageBody, 0, messageBody.Length);
-            context.Response.OutputStream.Close();
+            response.ContentType = "text/html";
+            response.ContentLength64 = messageBody.Length;
+            response.OutputStream.Write(messageBody, 0, messageBody.Length);
+            response.OutputStream.Close();
         }
 
         private static String GetHtmlDebugTable(NameValueCollection nameValueCollection)
