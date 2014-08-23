@@ -10,13 +10,12 @@ namespace Techeasy.MicroFramework.Net.Http
 {
     public class HttpServer
     {
-        private readonly HttpListener _httpListener;
+        private static ArrayList _httpHandlers;
 
-        private readonly ArrayList _httpHandlers;
+        static Queue _responseQueue = new Queue();
 
         public HttpServer()
         {
-            _httpListener = new HttpListener("http");
             _httpHandlers = new ArrayList();
         }
 
@@ -32,22 +31,66 @@ namespace Techeasy.MicroFramework.Net.Http
 
         public void Run()
         {
-            _httpListener.Start();
-            while(true)
+            HttpListener httpListener = new HttpListener("http");
+            while (true)
             {
-                HttpListenerContext ctx = _httpListener.GetContext();
-                new Thread(() => Handle(ctx)).Start();
+                try
+                {
+                    if (!httpListener.IsListening)
+                        httpListener.Start();
+
+                    HttpListenerContext context = httpListener.GetContext();
+                    lock (_responseQueue)
+                    {
+                        _responseQueue.Enqueue(context);
+                    }
+
+                    Thread th = new Thread(new ThreadStart(HandleRequestThread));
+                    th.Start();
+                }
+                catch (InvalidOperationException)
+                {
+                    httpListener.Stop();
+                    Thread.Sleep(1000);
+                }
+                catch (ObjectDisposedException)
+                {
+                    httpListener.Start();
+                }
+                catch
+                {
+                    Thread.Sleep(1000);
+                }
             }
         }
 
-        private void Handle(HttpListenerContext ctx)
+        private static void HandleRequestThread()
         {
-            foreach (var httpHandlerObj in _httpHandlers)
+            HttpListenerContext context = null;
+
+            try
             {
-                IHttpHandler httpHandler = httpHandlerObj as IHttpHandler;
-                httpHandler.ProcessRequest(ctx);
+                lock (_responseQueue)
+                {
+                    context = (HttpListenerContext)_responseQueue.Dequeue();
+                }
+
+                foreach (var httpHandlerObj in _httpHandlers)
+                {
+                    IHttpHandler httpHandler = httpHandlerObj as IHttpHandler;
+                    httpHandler.ProcessRequest(context);
+                }
             }
-            ctx.Close();
+            catch
+            {
+            }
+            finally
+            {
+                if (context != null)
+                {
+                    context.Close();
+                }
+            }
         }
     }
 }
