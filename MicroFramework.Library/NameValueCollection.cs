@@ -5,38 +5,31 @@ namespace Techeasy.MicroFramework.Library
 {
     public class NameValueCollection
     {
-        private readonly ArrayList _nameValuesPairs;
+        private readonly Hashtable _hashtable;
 
         public NameValueCollection()
         {
-            _nameValuesPairs = new ArrayList();
+            _hashtable = new Hashtable();
         }
 
-        public int Count { get { return _nameValuesPairs.Count; } }
+        public int Count { get { return _hashtable.Count; } }
 
         public void Clear()
         {
-            _nameValuesPairs.Clear();
+            _hashtable.Clear();
         }
 
         private NameValuesPair Get(String name)
         {
-            foreach (var nameValuesPairObj in _nameValuesPairs)
-            {
-                var nameValuesPair = nameValuesPairObj as NameValuesPair;
-                if (nameValuesPair.Name.Equals(name))
-                    return nameValuesPair;
-            }
-            return null;
+            if (!_hashtable.Contains(name))
+                return null;
+
+            return _hashtable[name] as NameValuesPair;
         }
 
         private NameValuesPair Get(Int32 index)
         {
-            var nameValuesPairObj = _nameValuesPairs[index];
-            if (nameValuesPairObj == null)
-                return null;
-
-            return nameValuesPairObj as NameValuesPair;
+            return _hashtable[index] as NameValuesPair;
         }
 
         public void Add(String name, String value)
@@ -46,15 +39,14 @@ namespace Techeasy.MicroFramework.Library
             {
                 nameValuesPair = new NameValuesPair();
                 nameValuesPair.Name = name;
-                _nameValuesPairs.Add(nameValuesPair);
+                _hashtable.Add(name, nameValuesPair);
             }
             nameValuesPair.AddValue(value);
         }
 
         public void Remove(String name)
         {
-            NameValuesPair nameValuesPair = Get(name);
-            _nameValuesPairs.Remove(nameValuesPair);
+            _hashtable.Remove(name);
         }
 
         public String[] GetValues(String name)
@@ -92,7 +84,25 @@ namespace Techeasy.MicroFramework.Library
 
         public NameValuesPair[] Pairs
         {
-            get { return _nameValuesPairs.ToArray(typeof (NameValuesPair)) as NameValuesPair[]; }
+            get
+            {
+                NameValuesPair[] pairs = new NameValuesPair[_hashtable.Count];
+                _hashtable.Values.CopyTo(pairs, 0);
+                return pairs;
+            }
+        }
+
+        public Hashtable Hashtable
+        {
+            get
+            {
+                Hashtable hashtable = new Hashtable();
+                foreach (var nameValuesPair in Pairs)
+                {
+                    hashtable.Add(nameValuesPair.Name, nameValuesPair.Values);
+                }
+                return hashtable;
+            }
         }
     }
 }
