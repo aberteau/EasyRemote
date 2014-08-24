@@ -92,17 +92,13 @@ namespace Techeasy.MicroFramework.Library
             }
         }
 
-        public Hashtable Hashtable
+        public Hashtable ToHashtable()
         {
-            get
-            {
-                Hashtable hashtable = new Hashtable();
-                foreach (var nameValuesPair in Pairs)
-                {
-                    hashtable.Add(nameValuesPair.Name, nameValuesPair.Values);
-                }
-                return hashtable;
-            }
+            Hashtable hashtable = new Hashtable();
+            foreach (var nameValuesPair in Pairs)
+                hashtable.Add(nameValuesPair.Name, nameValuesPair.Values);
+
+            return hashtable;
         }
     }
 }
