@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using Json.NETMF;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using Microsoft.SPOT.Net.NetworkInformation;
@@ -46,7 +48,20 @@ namespace Techeasy.EasyRemote.MicroApp
             var routeDispatcher = new RouteDispatcher();
             routeDispatcher.Add(new Route("/api/time", HttpMethod.Get, GetTime));
             routeDispatcher.Add(new Route("/api/led", HttpMethod.Get, ChangeLedStatus));
+            routeDispatcher.Add(new Route("/api/debugquery", HttpMethod.Get, DebugQuery));
             return routeDispatcher;
+        }
+
+        private static void DebugQuery(HttpListenerRequest request, HttpListenerResponse response)
+        {
+            Url url = HttpUtility.ExtractUrl(request.Url.OriginalString);
+
+            string json = JsonSerializer.SerializeObject(url.Params.ToHashtable());
+            byte[] messageBody = Encoding.UTF8.GetBytes(json);
+            response.ContentType = "application/json";
+            response.ContentLength64 = messageBody.Length;
+            response.OutputStream.Write(messageBody, 0, messageBody.Length);
+            response.OutputStream.Close();
         }
 
         private static void ChangeLedStatus(HttpListenerRequest request, HttpListenerResponse response)
