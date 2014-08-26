@@ -59,10 +59,10 @@ namespace Techeasy.EasyRemote.MicroApp
         private static RouteDispatcher InitRouteDispatcher()
         {
             var routeDispatcher = new RouteDispatcher();
-            routeDispatcher.Add(new Route("/api/time", HttpMethod.Get, GetTime));
-            routeDispatcher.Add(new Route("/api/led", HttpMethod.Get, ChangeLedStatus));
-            routeDispatcher.Add(new Route("/api/debugquery", HttpMethod.Get, DebugQuery));
-            routeDispatcher.Add(new Route("/api/outlet", HttpMethod.Get, ChangeOutletStatus));
+            routeDispatcher.Add(new Route("/time", HttpMethod.Get, GetTime));
+            routeDispatcher.Add(new Route("/led", HttpMethod.Get, ChangeLedStatus));
+            routeDispatcher.Add(new Route("/debugquery", HttpMethod.Get, DebugQuery));
+            routeDispatcher.Add(new Route("/outlet", HttpMethod.Get, ChangeOutletStatus));
             return routeDispatcher;
         }
 
