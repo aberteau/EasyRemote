@@ -31,8 +31,10 @@
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
     <Compile Include="Exceptions\BadRequestHttpException.cs" />
+    <Compile Include="Exceptions\ExceptionHelper.cs" />
     <Compile Include="Exceptions\HttpException.cs" />
     <Compile Include="Exceptions\InternalServerErrorHttpException.cs" />
+    <Compile Include="Exceptions\NotFoundHttpException.cs" />
     <Compile Include="HttpMethod.cs" />
     <Compile Include="IHttpHandler.cs" />
     <Compile Include="Url.cs" />
