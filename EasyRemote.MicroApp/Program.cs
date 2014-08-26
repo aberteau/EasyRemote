@@ -65,12 +65,12 @@ namespace Techeasy.EasyRemote.MicroApp
         private static void ChangeOutletStatus(HttpListenerRequest request, HttpListenerResponse response)
         {
             Url url = HttpUtility.ExtractUrl(request.Url.OriginalString);
-            Int32 outletNum = 0;
+            UInt16 outletNum = 0;
             bool outletState = false;
 
             try
             {
-                outletNum = url.Params.GetSingleValueInt32("n");
+                outletNum = url.Params.GetSingleValueUInt16("n");
             }
             catch (Exception exception)
             {

@@ -132,6 +132,19 @@ namespace Techeasy.MicroFramework.Library
             }
         }
 
+        public UInt16 GetSingleValueUInt16(string name)
+        {
+            String valueStr = GetSingleValueString(name);
+            try
+            {
+                return UInt16.Parse(valueStr);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("La valeur fournie doit être numérique pour le paramètre :" + name, exception);
+            }
+        }
+
         public Boolean GetSingleValueBoolean(string name)
         {
             String valueStr = GetSingleValueString(name);

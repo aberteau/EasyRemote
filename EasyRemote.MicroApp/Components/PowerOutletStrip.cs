@@ -13,12 +13,12 @@ namespace Techeasy.EasyRemote.MicroApp.Components
             _outputPinByOutletNumber = new Hashtable();
         }
 
-        public void AddOutlet(Int32 number, OutputPort pin)
+        public void AddOutlet(UInt16 number, OutputPort pin)
         {
             _outputPinByOutletNumber.Add(number, pin);
         }
 
-        private OutputPort this[Int32 outletNumber]
+        private OutputPort this[UInt16 outletNumber]
         {
             get
             {
@@ -29,7 +29,7 @@ namespace Techeasy.EasyRemote.MicroApp.Components
             }
         }
 
-        public void Write(Int32 outletNumber, Boolean state)
+        public void Write(UInt16 outletNumber, Boolean state)
         {
             this[outletNumber].Write(state);
         }
