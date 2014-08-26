@@ -39,10 +39,7 @@ namespace Techeasy.EasyRemote.MicroApp
             _powerOutletStrip.AddOutlet(2, new OutputPort(Pins.GPIO_PIN_D9, false));
             _powerOutletStrip.AddOutlet(3, new OutputPort(Pins.GPIO_PIN_D10, false));
 
-            NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
-            NetworkInterface networkInterface = networkInterfaces[0];
-            networkInterface.EnableDhcp();
-            Debug.Print("IP Address = " + networkInterface.IPAddress + ", Gateway = " + networkInterface.GatewayAddress + ", MAC = " + networkInterface.PhysicalAddress);
+            DebugNetworkInfo();
 
             RouteDispatcher routeDispatcher = InitRouteDispatcher();
 
@@ -50,6 +47,13 @@ namespace Techeasy.EasyRemote.MicroApp
             httpServer.AddHttpHandler(routeDispatcher);
             httpServer.RunAsync();
             Thread.Sleep(Timeout.Infinite);
+        }
+
+        private static void DebugNetworkInfo()
+        {
+            NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+            NetworkInterface networkInterface = networkInterfaces[0];
+            Debug.Print("IP Address = " + networkInterface.IPAddress + ", Gateway = " + networkInterface.GatewayAddress + ", MAC = " + networkInterface.PhysicalAddress);
         }
 
         private static RouteDispatcher InitRouteDispatcher()
