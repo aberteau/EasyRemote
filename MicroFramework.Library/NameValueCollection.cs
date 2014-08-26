@@ -105,5 +105,37 @@ namespace Techeasy.MicroFramework.Library
 
             return hashtable;
         }
+
+        public String GetSingleValueString(string name)
+        {
+            String[] paramValues = this[name];
+
+            if (paramValues == null || paramValues.Length == 0)
+                throw new Exception("Aucune valeur fournie pour le paramètre : " + name);
+
+            if (paramValues.Length > 1)
+                throw new Exception("Seule une valeur est permise pour le paramètre : " + name);
+
+            return paramValues[0];
+        }
+
+        public Int32 GetSingleValueInt32(string name)
+        {
+            String valueStr = GetSingleValueString(name);
+            try
+            {
+                return Int32.Parse(valueStr);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("La valeur fournie doit être numérique pour le paramètre :" + name, exception);
+            }
+        }
+
+        public Boolean GetSingleValueBoolean(string name)
+        {
+            String valueStr = GetSingleValueString(name);
+            return Parse.ParseBoolFromIntString(valueStr);
+        }
     }
 }
