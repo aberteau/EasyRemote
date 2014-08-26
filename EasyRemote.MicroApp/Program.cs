@@ -10,8 +10,10 @@ using Microsoft.SPOT.Hardware;
 using Microsoft.SPOT.Net.NetworkInformation;
 using SecretLabs.NETMF.Hardware;
 using SecretLabs.NETMF.Hardware.Netduino;
+using Techeasy.EasyRemote.MicroApp.Components;
 using Techeasy.MicroFramework.Library;
 using Techeasy.MicroFramework.Net.Http;
+using Techeasy.MicroFramework.Net.Http.Exceptions;
 using Techeasy.MicroFramework.Net.Http.Requests;
 using Techeasy.MicroFramework.Net.Http.Utilities;
 
@@ -21,6 +23,8 @@ namespace Techeasy.EasyRemote.MicroApp
     {
         private static OutputPort _led;
 
+        private static PowerOutletStrip _powerOutletStrip;
+
         private static bool _ledStatus;
 
         public static void Main()
@@ -29,6 +33,11 @@ namespace Techeasy.EasyRemote.MicroApp
             Debug.Print("Web Server test software");
 
             _led = new OutputPort(Pins.ONBOARD_LED, false);
+
+            _powerOutletStrip = new PowerOutletStrip();
+            _powerOutletStrip.AddOutlet(1, new OutputPort(Pins.GPIO_PIN_D8, false));
+            _powerOutletStrip.AddOutlet(2, new OutputPort(Pins.GPIO_PIN_D9, false));
+            _powerOutletStrip.AddOutlet(3, new OutputPort(Pins.GPIO_PIN_D10, false));
 
             NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
             NetworkInterface networkInterface = networkInterfaces[0];
@@ -49,7 +58,39 @@ namespace Techeasy.EasyRemote.MicroApp
             routeDispatcher.Add(new Route("/api/time", HttpMethod.Get, GetTime));
             routeDispatcher.Add(new Route("/api/led", HttpMethod.Get, ChangeLedStatus));
             routeDispatcher.Add(new Route("/api/debugquery", HttpMethod.Get, DebugQuery));
+            routeDispatcher.Add(new Route("/api/outlet", HttpMethod.Get, ChangeOutletStatus));
             return routeDispatcher;
+        }
+
+        private static void ChangeOutletStatus(HttpListenerRequest request, HttpListenerResponse response)
+        {
+            Url url = HttpUtility.ExtractUrl(request.Url.OriginalString);
+            Int32 outletNum = 0;
+            bool outletState = false;
+
+            try
+            {
+                outletNum = url.Params.GetSingleValueInt32("n");
+            }
+            catch (Exception exception)
+            {
+                throw new BadRequestHttpException("N° de prise fournie incorrect", exception);
+            }
+
+            if(outletNum == 0)
+                throw new BadRequestHttpException("N° de prise doit être différent de 0");
+
+            try
+            {
+                outletState = url.Params.GetSingleValueBoolean("s");
+            }
+            catch (Exception exception)
+            {
+                throw new BadRequestHttpException("Etat de la prise incorrect", exception);
+            }
+
+            _powerOutletStrip.Write(outletNum, outletState);
+            response.StatusCode = (Int32) HttpStatusCode.OK;
         }
 
         private static void DebugQuery(HttpListenerRequest request, HttpListenerResponse response)
