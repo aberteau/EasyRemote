@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using Microsoft.SPOT;
 using Techeasy.MicroFramework.Library;
+using Techeasy.MicroFramework.Net.Http.Exceptions;
 using Techeasy.MicroFramework.Net.Http.Requests;
 using Techeasy.MicroFramework.Net.Http.Utilities;
 
@@ -48,12 +49,12 @@ namespace Techeasy.MicroFramework.Net.Http
             var method = HttpMethodParser.Parse(context.Request.HttpMethod);
             var route = Find(method, url.Path);
 
-            if (route != null)
-            {
-                HttpListenerRequest request = context.Request;
-                HttpListenerResponse response = context.Response;
-                route.RequestHandler(request, response);
-            }
+            if(route == null)
+                throw new NotFoundHttpException(url.Path + " invalide");
+
+            HttpListenerRequest request = context.Request;
+            HttpListenerResponse response = context.Response;
+            route.RequestHandler(request, response);
         }
     }
 }
