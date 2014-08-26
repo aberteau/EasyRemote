@@ -3,6 +3,7 @@ using System.Collections;
 using System.Net;
 using System.Text;
 using System.Threading;
+using Techeasy.MicroFramework.Net.Http.Exceptions;
 
 namespace Techeasy.MicroFramework.Net.Http
 {
@@ -60,14 +61,13 @@ namespace Techeasy.MicroFramework.Net.Http
                     httpHandler.ProcessRequest(context);
                 }
             }
+            catch (HttpException exception)
+            {
+                ExceptionHelper.RespondError(context.Response, exception);
+            }
             catch(Exception exception)
             {
-                byte[] messageBody = Encoding.UTF8.GetBytes(exception.ToString());
-                context.Response.ContentType = "text/plain";
-                context.Response.StatusCode = (Int32)HttpStatusCode.InternalServerError;
-                context.Response.ContentLength64 = messageBody.Length;
-                context.Response.OutputStream.Write(messageBody, 0, messageBody.Length);
-                context.Response.OutputStream.Close();
+                ExceptionHelper.RespondError(context.Response, exception);
             }
             finally
             {
