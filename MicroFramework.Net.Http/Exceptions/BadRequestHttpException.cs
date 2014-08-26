@@ -8,7 +8,7 @@ namespace Techeasy.MicroFramework.Net.Http.Exceptions
         : HttpException
     {
         public BadRequestHttpException(string message, Exception innerException)
-            : base((Int32)HttpStatusCode.BadRequest, message, innerException)
+            : base(HttpStatusCode.BadRequest, message, innerException)
         { }
 
         public BadRequestHttpException(string message)

@@ -8,7 +8,7 @@ namespace Techeasy.MicroFramework.Net.Http.Exceptions
         : HttpException
     {
         public InternalServerErrorHttpException(string message, Exception innerException)
-            : base((Int32)HttpStatusCode.InternalServerError, message, innerException)
+            : base(HttpStatusCode.InternalServerError, message, innerException)
         { }
 
         public InternalServerErrorHttpException(string message)

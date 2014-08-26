@@ -1,19 +1,25 @@
 using System;
+using System.Net;
 
 namespace Techeasy.MicroFramework.Net.Http.Exceptions
 {
     public class HttpException
         : Exception
     {
-        public int HttpCode { get; private set; }
+        public HttpStatusCode HttpCode { get; private set; }
 
-        public HttpException(int httpCode, String message, Exception innerException)
+        public Int32 HttpCodeInt
+        {
+            get { return (Int32) HttpCode; }
+        }
+
+        public HttpException(HttpStatusCode httpCode, String message, Exception innerException)
             : base(message, innerException)
         {
             HttpCode = httpCode;
         }
 
-        public HttpException(int httpCode, String message)
+        public HttpException(HttpStatusCode httpCode, String message)
             : this(httpCode, message, null)
         { }
     }
