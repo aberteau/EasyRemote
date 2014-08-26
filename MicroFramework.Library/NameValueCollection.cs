@@ -21,10 +21,15 @@ namespace Techeasy.MicroFramework.Library
 
         private NameValuesPair Get(String name)
         {
-            if (!_hashtable.Contains(name))
+            if (!Contains(name))
                 return null;
 
             return _hashtable[name] as NameValuesPair;
+        }
+
+        private bool Contains(string name)
+        {
+            return _hashtable.Contains(name);
         }
 
         private NameValuesPair Get(Int32 index)
