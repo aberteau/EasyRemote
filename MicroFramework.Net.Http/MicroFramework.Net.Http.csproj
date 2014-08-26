@@ -43,6 +43,7 @@
     <Compile Include="Requests\HttpRequestHandler.cs" />
     <Compile Include="Utilities\HttpMethodParser.cs" />
     <Compile Include="Utilities\HttpUtility.cs" />
+    <Compile Include="Utilities\NameValueCollectionExtensions.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="HttpServer.cs" />
