@@ -32,6 +32,7 @@
   <ItemGroup>
     <Compile Include="NameValueCollection.cs" />
     <Compile Include="NameValuesPair.cs" />
+    <Compile Include="Parse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
