@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Text;
 using Microsoft.SPOT;
+using Techeasy.MicroFramework.Library;
 
 namespace Techeasy.MicroFramework.Net.Http.Exceptions
 {
@@ -9,8 +10,14 @@ namespace Techeasy.MicroFramework.Net.Http.Exceptions
     {
         public static void RespondError(HttpListenerResponse httpListenerResponse, HttpException httpException)
         {
-            byte[] messageBody = Encoding.UTF8.GetBytes(httpException.ToString());
+            StringBuilder stringBuilder = new StringBuilder(httpException.Message);
+
+            if (httpException.InnerException != null)
+                stringBuilder.Append(" Détails : " + httpException.InnerException.Message);
+
+            byte[] messageBody = Encoding.UTF8.GetBytes(stringBuilder.ToString());
             httpListenerResponse.ContentType = "text/plain";
+            httpListenerResponse.ContentEncoding = Encoding.UTF8;
             httpListenerResponse.StatusCode = httpException.HttpCodeInt;
             httpListenerResponse.ContentLength64 = messageBody.Length;
             httpListenerResponse.OutputStream.Write(messageBody, 0, messageBody.Length);
