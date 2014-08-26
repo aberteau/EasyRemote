@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Net;
+using System.Text;
 using System.Threading;
-using Microsoft.SPOT;
-using Techeasy.MicroFramework.Net.Http.Requests;
-using Techeasy.MicroFramework.Net.Http.Utilities;
 
 namespace Techeasy.MicroFramework.Net.Http
 {
@@ -62,8 +60,14 @@ namespace Techeasy.MicroFramework.Net.Http
                     httpHandler.ProcessRequest(context);
                 }
             }
-            catch
+            catch(Exception exception)
             {
+                byte[] messageBody = Encoding.UTF8.GetBytes(exception.ToString());
+                context.Response.ContentType = "text/plain";
+                context.Response.StatusCode = (Int32)HttpStatusCode.InternalServerError;
+                context.Response.ContentLength64 = messageBody.Length;
+                context.Response.OutputStream.Write(messageBody, 0, messageBody.Length);
+                context.Response.OutputStream.Close();
             }
             finally
             {
