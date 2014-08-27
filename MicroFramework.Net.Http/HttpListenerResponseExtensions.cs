@@ -12,16 +12,18 @@ namespace Techeasy.MicroFramework.Net.Http
         {
             string json = JsonSerializer.SerializeObject(obj);
             byte[] messageBody = Encoding.UTF8.GetBytes(json);
-            response.ContentType = ContentType.ApplicationJson;
-            response.ContentLength64 = messageBody.Length;
-            response.OutputStream.Write(messageBody, 0, messageBody.Length);
-            response.OutputStream.Close();
+            Write(response, messageBody, ContentType.ApplicationJson);
         }
 
         public static void WriteHtml(this HttpListenerResponse response, String str)
         {
             byte[] messageBody = Encoding.UTF8.GetBytes(str);
-            response.ContentType = ContentType.ApplicationJson;
+            Write(response, messageBody, ContentType.TextHtml);
+        }
+
+        private static void Write(HttpListenerResponse response, byte[] messageBody, String contentType)
+        {
+            response.ContentType = contentType;
             response.ContentLength64 = messageBody.Length;
             response.OutputStream.Write(messageBody, 0, messageBody.Length);
             response.OutputStream.Close();
