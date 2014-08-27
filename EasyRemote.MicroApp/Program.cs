@@ -129,13 +129,7 @@ namespace Techeasy.EasyRemote.MicroApp
         private static void DebugQuery(HttpListenerRequest request, HttpListenerResponse response)
         {
             Url url = HttpUtility.ExtractUrl(request.Url.OriginalString);
-
-            string json = JsonSerializer.SerializeObject(url.Params.ToHashtable());
-            byte[] messageBody = Encoding.UTF8.GetBytes(json);
-            response.ContentType = "application/json";
-            response.ContentLength64 = messageBody.Length;
-            response.OutputStream.Write(messageBody, 0, messageBody.Length);
-            response.OutputStream.Close();
+            response.WriteJson(url.Params.ToHashtable());
         }
 
         private static void ChangeLedStatus(HttpListenerRequest request, HttpListenerResponse response)
@@ -149,11 +143,7 @@ namespace Techeasy.EasyRemote.MicroApp
             Url url = HttpUtility.ExtractUrl(request.Url.OriginalString);
             string msg = request.HttpMethod + " " + request.Url.OriginalString + "<br/>" + GetHtmlDebugTable(url.Params);
             String str = "<html><body>" + msg + "</body></html>";
-            byte[] messageBody = Encoding.UTF8.GetBytes(str);
-            response.ContentType = "text/html";
-            response.ContentLength64 = messageBody.Length;
-            response.OutputStream.Write(messageBody, 0, messageBody.Length);
-            response.OutputStream.Close();
+            response.WriteHtml(str);
         }
 
         private static String GetHtmlDebugTable(NameValueCollection nameValueCollection)
