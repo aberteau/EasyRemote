@@ -141,7 +141,7 @@ namespace Techeasy.EasyRemote.MicroApp
         private static void GetTime(HttpListenerRequest request, HttpListenerResponse response)
         {
             Url url = HttpUtility.ExtractUrl(request.Url.OriginalString);
-            string msg = request.HttpMethod + " " + request.Url.OriginalString + "<br/>" + HtmlStringHelper.GetTable(url.Params);
+            string msg = request.HttpMethod + " " + request.Url.OriginalString + "<br/>" + url.Params.ToTableHtmlString();
             String str = "<html><body>" + msg + "</body></html>";
             response.WriteHtml(str);
         }
