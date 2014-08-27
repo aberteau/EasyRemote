@@ -30,11 +30,13 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="ContentType.cs" />
     <Compile Include="Exceptions\BadRequestHttpException.cs" />
     <Compile Include="Exceptions\ExceptionHelper.cs" />
     <Compile Include="Exceptions\HttpException.cs" />
     <Compile Include="Exceptions\InternalServerErrorHttpException.cs" />
     <Compile Include="Exceptions\NotFoundHttpException.cs" />
+    <Compile Include="HttpListenerResponseExtensions.cs" />
     <Compile Include="HttpMethod.cs" />
     <Compile Include="IHttpHandler.cs" />
     <Compile Include="Url.cs" />
@@ -50,6 +52,9 @@
     <Compile Include="Utilities\UrlUtility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Json.NetMF">
+      <HintPath>..\packages\Json.NetMF.1.3.0.0\lib\netmf42\Json.NetMF.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.SPOT.Native">
     </Reference>
     <Reference Include="System.Http" />
@@ -59,5 +64,8 @@
       <Project>{7765E992-0373-4301-B33E-878638369FC2}</Project>
       <Name>MicroFramework.Library</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
