@@ -29,6 +29,8 @@ namespace Techeasy.EasyRemote.MicroApp
 
         private static AnalogInput _photoResistorPort;
 
+        private static AnalogInput _thermistorPort;
+
         private static bool _ledStatus;
 
         public static void Main()
@@ -39,6 +41,7 @@ namespace Techeasy.EasyRemote.MicroApp
             _led = new OutputPort(Pins.ONBOARD_LED, false);
 
             _photoResistorPort = new AnalogInput(Cpu.AnalogChannel.ANALOG_0);
+            _thermistorPort = new AnalogInput(Cpu.AnalogChannel.ANALOG_1);
 
             _powerOutletStrip = new PowerOutletStrip();
             _powerOutletStrip.AddOutlet(1, new OutputPort(Pins.GPIO_PIN_D8, false));
@@ -70,20 +73,26 @@ namespace Techeasy.EasyRemote.MicroApp
             routeDispatcher.Add(new Route("/debugquery", HttpMethod.Get, DebugQuery));
             routeDispatcher.Add(new Route("/outlet", HttpMethod.Get, ChangeOutletStatus));
             routeDispatcher.Add(new Route("/luminosite", HttpMethod.Get, GetLuminosite));
+            routeDispatcher.Add(new Route("/temperature", HttpMethod.Get, GetTemperature));
             return routeDispatcher;
+        }
+
+        private static void GetTemperature(HttpListenerRequest request, HttpListenerResponse response)
+        {
+            double analogValue = GetAnalogValue(_thermistorPort);
+            response.WriteJson(analogValue);
         }
 
         private static void GetLuminosite(HttpListenerRequest request, HttpListenerResponse response)
         {
-            double voltagePercentage = _photoResistorPort.Read();
-            double analogValue = voltagePercentage * AnalogReference;
+            var analogValue = GetAnalogValue(_photoResistorPort);
+            response.WriteJson(analogValue);
+        }
 
-            string json = JsonSerializer.SerializeObject(analogValue);
-            byte[] messageBody = Encoding.UTF8.GetBytes(json);
-            response.ContentType = "application/json";
-            response.ContentLength64 = messageBody.Length;
-            response.OutputStream.Write(messageBody, 0, messageBody.Length);
-            response.OutputStream.Close();
+        private static double GetAnalogValue(AnalogInput analogInput)
+        {
+            double voltagePercentage = analogInput.Read();
+            return voltagePercentage * AnalogReference;
         }
 
         private static void ChangeOutletStatus(HttpListenerRequest request, HttpListenerResponse response)
