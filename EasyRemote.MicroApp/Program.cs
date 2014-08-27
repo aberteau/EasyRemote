@@ -141,36 +141,9 @@ namespace Techeasy.EasyRemote.MicroApp
         private static void GetTime(HttpListenerRequest request, HttpListenerResponse response)
         {
             Url url = HttpUtility.ExtractUrl(request.Url.OriginalString);
-            string msg = request.HttpMethod + " " + request.Url.OriginalString + "<br/>" + GetHtmlDebugTable(url.Params);
+            string msg = request.HttpMethod + " " + request.Url.OriginalString + "<br/>" + HtmlStringHelper.GetTable(url.Params);
             String str = "<html><body>" + msg + "</body></html>";
             response.WriteHtml(str);
-        }
-
-        private static String GetHtmlDebugTable(NameValueCollection nameValueCollection)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            if (nameValueCollection != null)
-            {
-                stringBuilder.Append("<table>");
-                for (int i = 0; i < nameValueCollection.Pairs.Length; i++)
-                {
-                    NameValuesPair pair = nameValueCollection.Pairs[i];
-                    stringBuilder.Append("<tr>");
-                    stringBuilder.Append("<td>" + pair.Name + "</td>");
-                    stringBuilder.Append("<td>");
-                    for (int j = 0; j < pair.Values.Length; j++)
-                    {
-                        stringBuilder.Append(pair.Values[j]);
-                        stringBuilder.Append(", ");
-                    }
-                    stringBuilder.Append("</td>");
-                    stringBuilder.Append("</tr>");
-                }
-                stringBuilder.Append("</table>");    
-            }
-
-            return stringBuilder.ToString();
         }
     }
 }
